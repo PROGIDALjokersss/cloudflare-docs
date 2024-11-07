@@ -313,10 +313,10 @@ The command to install the certificate with Python on Windows automatically incl
 
 1. [Download a Cloudflare certificate](#download-the-cloudflare-root-certificate) in `.crt` format.
 2. In a PowerShell terminal, install the `certifi` package:
-   ```sh
+   ```powershell
    python -m pip install certifi
    ```
-3. Identify the Python CA store and get its path:
+3. Identify the Python CA store:
    ```powershell
    $CERT_PATH = python -c "import certifi; print(certifi.where())"
    ```
@@ -324,39 +324,32 @@ The command to install the certificate with Python on Windows automatically incl
    ```powershell
    gc "$env:USERPROFILE\Downloads\certificate.crt" | ac $CERT_PATH
    ```
+5. If needed, configure system variables to point to this CA store by adding them to PowerShell's configuration file:
+   ```powershell
+   [System.Environment]::SetEnvironmentVariable('CERT_PATH', $CERT_PATH, 'Machine')
+   [System.Environment]::SetEnvironmentVariable('SSL_CERT_FILE', $CERT_PATH, 'Machine')
+   [System.Environment]::SetEnvironmentVariable('REQUESTS_CA_BUNDLE', $CERT_PATH, 'Machine')
+   ```
+6. Restart your terminal.
 
 #### Python on Mac and Linux
 
 1. [Download a Cloudflare certificate](#download-the-cloudflare-root-certificate) in `.pem` format.
 2. In a terminal, install the `certifi` package:
-
    ```sh
    python -m pip install certifi
    ```
-
-3. Identify the CA store. For example:
-
-   ```sh
-   python -m certifi
-   ```
-
-   ```sh output
-   ~/Library/Python/3.7/lib/python/site-packages/certifi/cert.pem
-   ```
-
-4. Append the Cloudflare certificate to this CA store by running:
-
+3. Append the Cloudflare certificate to this CA store by running:
    ```sh
    echo | cat - certificate.pem >> $(python -m certifi)
    ```
-
-5. If needed, configure system variables to point to this CA store:
-
+4. If needed, configure system variables to point to this CA store by adding them to your shell's configuration file (such as `~/.zshrc` or `~/.bash_profile`). For example:
    ```sh
-   export CERT_PATH=$(python -m certifi)
+   echo 'export CERT_PATH=$(python -c "import certifi; print(certifi.where())")
    export SSL_CERT_FILE=${CERT_PATH}
-   export REQUESTS_CA_BUNDLE=${CERT_PATH}
+   export REQUESTS_CA_BUNDLE=${CERT_PATH}' >> ~/.zshrc
    ```
+5. Restart your terminal.
 
 ### Git
 
