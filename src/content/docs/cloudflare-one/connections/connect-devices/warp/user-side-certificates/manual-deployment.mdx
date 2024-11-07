@@ -312,20 +312,29 @@ Depending on which version of Python you have installed, you may need to use eit
 The command to install the certificate with Python on Windows automatically includes `pip` and `certifi` (the default certificate bundle for certificate validation).
 
 1. [Download a Cloudflare certificate](#download-the-cloudflare-root-certificate) in `.crt` format.
-2. Update the bundle to include the Cloudflare certificate:
+2. In a PowerShell terminal, install the `certifi` package:
+   ```sh
+   python -m pip install certifi
+   ```
+3. Identify the Python CA store and get its path:
    ```powershell
-   gc "$env:USERPROFILE\Downloads\certificate.crt" | ac C:\Python37\Lib\site-packages\pip\_vendor\certifi\cacert.pem
+   $CERT_PATH = python -c "import certifi; print(certifi.where())"
+   ```
+4. Update the bundle to include the Cloudflare certificate:
+   ```powershell
+   gc "$env:USERPROFILE\Downloads\certificate.crt" | ac $CERT_PATH
    ```
 
 #### Python on Mac and Linux
 
-1. In a terminal, install the `certifi` package:
+1. [Download a Cloudflare certificate](#download-the-cloudflare-root-certificate) in `.pem` format.
+2. In a terminal, install the `certifi` package:
 
    ```sh
    python -m pip install certifi
    ```
 
-2. Identify the CA store. For example:
+3. Identify the CA store. For example:
 
    ```sh
    python -m certifi
@@ -334,8 +343,6 @@ The command to install the certificate with Python on Windows automatically incl
    ```sh output
    ~/Library/Python/3.7/lib/python/site-packages/certifi/cert.pem
    ```
-
-3. [Download a Cloudflare certificate](#download-the-cloudflare-root-certificate) in `.pem` format.
 
 4. Append the Cloudflare certificate to this CA store by running:
 
