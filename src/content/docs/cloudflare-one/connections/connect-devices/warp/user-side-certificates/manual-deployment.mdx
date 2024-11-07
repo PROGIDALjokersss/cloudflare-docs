@@ -324,7 +324,7 @@ The command to install the certificate with Python on Windows automatically incl
    ```powershell
    gc "$env:USERPROFILE\Downloads\certificate.crt" | ac $CERT_PATH
    ```
-5. If needed, configure system variables to point to this CA store by adding them to PowerShell's configuration file:
+5. (Optional) Configure your system variables to point to the CA store by adding them to PowerShell's configuration file:
    ```powershell
    [System.Environment]::SetEnvironmentVariable('CERT_PATH', $CERT_PATH, 'Machine')
    [System.Environment]::SetEnvironmentVariable('SSL_CERT_FILE', $CERT_PATH, 'Machine')
@@ -343,7 +343,7 @@ The command to install the certificate with Python on Windows automatically incl
    ```sh
    echo | cat - certificate.pem >> $(python -m certifi)
    ```
-4. If needed, configure system variables to point to this CA store by adding them to your shell's configuration file (such as `~/.zshrc` or `~/.bash_profile`). For example:
+4. (Optional) Configure your system variables to point to the CA store by adding them to your shell's configuration file (such as `~/.zshrc` or `~/.bash_profile`). For example:
    ```sh
    echo 'export CERT_PATH=$(python -c "import certifi; print(certifi.where())")
    export SSL_CERT_FILE=${CERT_PATH}
